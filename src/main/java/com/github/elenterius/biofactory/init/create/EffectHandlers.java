@@ -1,7 +1,7 @@
 package com.github.elenterius.biofactory.init.create;
 
 import com.github.elenterius.biofactory.init.ModFluids;
-import com.github.elenterius.biomancy.util.CombatUtil;
+import com.github.elenterius.biomancy.statuseffect.StatusEffectHandler;
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -31,9 +31,10 @@ public final class EffectHandlers {
 			if (level.getGameTime() % 5 != 0)
 				return;
 
-			List<LivingEntity> mobs = level.getEntitiesOfClass(LivingEntity.class, area, livingEntity -> !CombatUtil.hasAcidEffect(livingEntity));
+			List<LivingEntity> mobs = level.getEntitiesOfClass(LivingEntity.class, area, livingEntity -> StatusEffectHandler
+					.canApplyAcidEffect(livingEntity, StatusEffectHandler.CONSUME_ONE_NUTRIENT_PER_ARMOR_PIECE));
 			for (LivingEntity mob : mobs) {
-				CombatUtil.applyAcidEffect(mob, 4);
+				StatusEffectHandler.applyCorrosiveEffect(mob, 4);
 			}
 
 			BlockPos.betweenClosedStream(area).forEach(pos -> corrodeCopper(level, pos));
